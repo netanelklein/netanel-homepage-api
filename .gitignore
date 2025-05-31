@@ -1,0 +1,88 @@
+# Netanel Portfolio API - Git Ignore
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+
+# Logs
+*.log
+storage/logs/*
+!storage/logs/.gitkeep
+
+# Cache
+storage/cache/*
+!storage/cache/.gitkeep
+
+# Uploads
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# Composer
+vendor/
+composer.lock
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Testing
+coverage/
+.phpunit.result.cache
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Build artifacts
+build/
+dist/
+
+# Database
+*.sqlite
+*.db
+
+# Keys and certificates
+*.key
+*.pem
+*.crt
+*.p12
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Editor temporary files
+*.orig
+*.rej
+
+# PHP specific
+*.cache
+opcache/
+
+# Development tools
+.php_cs.cache
+.php-cs-fixer.cache
+
+# Kubernetes secrets (if any local ones)
+*secret*.yaml
+!k8s/secret.yaml

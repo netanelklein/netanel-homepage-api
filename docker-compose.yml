@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # Portfolio API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=netanel_portfolio
+      - DB_USERNAME=portfolio_user
+      - DB_PASSWORD=portfolio_pass
+      - SESSION_SECRET=local-dev-secret
+      - CACHE_ENABLED=true
+    volumes:
+      - ./storage/cache:/var/www/html/storage/cache
+      - ./storage/logs:/var/www/html/storage/logs
+      - ./storage/uploads:/var/www/html/storage/uploads
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # MySQL Database (matching OCI MySQL HeatWave version)
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=netanel_portfolio
+      - MYSQL_USER=portfolio_user
+      - MYSQL_PASSWORD=portfolio_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # Redis Cache (matching OCI Redis configuration)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - redis_data:/data
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # phpMyAdmin (for local development)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=portfolio_user
+      - PMA_PASSWORD=portfolio_pass
+    depends_on:
+      - mysql
+    networks:
+      - portfolio-network
+    profiles:
+      - dev-tools
+
+  # Redis Commander (for local development)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8082:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      - redis
+    networks:
+      - portfolio-network
+    profiles:
+      - dev-tools
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  portfolio-network:
+    driver: bridge
