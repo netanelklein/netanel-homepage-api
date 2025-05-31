@@ -460,8 +460,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Netanel Klein**
 - Website: [netanelk.com](https://netanelk.com)
-- Email: netanel@netanelk.com
-- LinkedIn: [netanel-klein](https://linkedin.com/in/netanel-klein)
+- LinkedIn: [netanel-klein](https://www.linkedin.com/in/netanelklein)
 
 ---
 
