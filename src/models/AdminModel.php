@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Models;
+namespace App\Models;
 
 /**
  * Admin Model

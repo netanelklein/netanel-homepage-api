@@ -106,16 +106,26 @@ class Database
             
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['charset']}";
             
-            // Remote database optimization options
-            $options = array_merge($config['options'], [
+            // Remote database optimization options (carefully merged to avoid conflicts)
+            $remoteOptions = [
                 PDO::ATTR_PERSISTENT => true, // Connection pooling
-                PDO::ATTR_TIMEOUT => 30, // 30 second timeout
-                PDO::MYSQL_ATTR_COMPRESS => true, // Compress data over network
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$config['charset']} COLLATE {$config['charset']}_unicode_ci",
                 PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-            ]);
+            ];
+            
+            // Only add compression if supported
+            try {
+                $remoteOptions[PDO::MYSQL_ATTR_COMPRESS] = true;
+            } catch (Exception $e) {
+                // Compression not supported, continue without it
+            }
+            
+            // Merge with config options, giving priority to config options
+            $options = array_merge($remoteOptions, $config['options']);
             
             $this->connection = new PDO($dsn, $config['username'], $config['password'], $options);
+            
+            // Set default fetch mode to associative array to avoid duplicate keys
+            $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             
             // Additional remote database optimizations
             $this->connection->exec("SET SESSION sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO'");

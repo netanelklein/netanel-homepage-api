@@ -1,9 +1,9 @@
 <?php
 
-namespace Middleware;
+namespace App\Middleware;
 
-use Core\Response;
-use Services\SessionService;
+use Api\Core\Response;
+use App\Services\SessionService;
 
 /**
  * Authentication Middleware

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Core\Response;
+use Core\Response;
 use App\Services\RemoteDatabaseService;
 use App\Services\ExtensionService;
 
@@ -17,7 +17,7 @@ class HealthController extends BaseController
      */
     public function index(): void 
     {
-        Response::json([
+        $this->response->json([
             'status' => 'healthy',
             'timestamp' => date('c'),
             'api_version' => '1.0.0',
@@ -47,7 +47,7 @@ class HealthController extends BaseController
             'performance' => $this->getPerformanceMetrics(),
         ];
 
-        Response::json($status);
+        $this->response->json($status);
     }
 
     /**
@@ -58,9 +58,9 @@ class HealthController extends BaseController
         $dbStatus = $this->getDatabaseStatus();
         
         if ($dbStatus['connected']) {
-            Response::json($dbStatus);
+            $this->response->json($dbStatus);
         } else {
-            Response::json($dbStatus, 503);
+            $this->response->json($dbStatus, 503);
         }
     }
 

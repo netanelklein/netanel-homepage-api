@@ -19,6 +19,7 @@ $router->get('api/health/database', 'HealthController@database');
 // =====================================================
 
 // Portfolio Data
+$router->get('api/portfolio', 'PortfolioController@getAllData'); // Complete portfolio data
 $router->get('api/portfolio/personal-info', 'PortfolioController@getPersonalInfo');
 $router->get('api/portfolio/projects', 'PortfolioController@getProjects');
 $router->get('api/portfolio/skills', 'PortfolioController@getSkills');
@@ -38,7 +39,7 @@ $router->post('api/contact/submit', 'ContactController@submit', ['RateLimit']);
 
 $router->post('api/auth/login', 'AuthController@login', ['RateLimit']);
 $router->post('api/auth/logout', 'AuthController@logout', ['Auth']);
-$router->get('api/auth/verify', 'AuthController@verify', ['Auth']);
+$router->get('api/auth/verify', 'AuthController@me', ['Auth']);
 
 // =====================================================
 // ADMIN API ROUTES (All require authentication)

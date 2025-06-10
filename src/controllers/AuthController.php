@@ -1,10 +1,10 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Models\AdminModel;
-use Services\SessionService;
-use Services\LoggingService;
+use App\Models\AdminModel;
+use App\Services\SessionService;
+use App\Services\LoggingService;
 
 /**
  * Authentication Controller

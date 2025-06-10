@@ -145,6 +145,11 @@ class RemoteDatabaseService
      */
     public static function getConnectionStats(): array 
     {
+        // Initialize service if not already done
+        if (self::$cacheService === null) {
+            self::init();
+        }
+        
         return [
             'active_connections' => count(self::$connections),
             'max_connections' => self::$maxConnections,
@@ -167,6 +172,11 @@ class RemoteDatabaseService
      */
     public static function testConnection(): array 
     {
+        // Initialize service if not already done
+        if (self::$cacheService === null) {
+            self::init();
+        }
+        
         $startTime = microtime(true);
         
         $connection = self::getConnection(
@@ -191,12 +201,20 @@ class RemoteDatabaseService
             
             $latency = round((microtime(true) - $startTime) * 1000, 2);
             
+            // Try to get compression status, fallback to false if not supported
+            $compression = false;
+            try {
+                $compression = $connection->getAttribute(\PDO::MYSQL_ATTR_COMPRESS);
+            } catch (\Exception $e) {
+                // Driver doesn't support this attribute, continue with false
+            }
+            
             return [
                 'success' => true,
                 'latency' => $latency . 'ms',
                 'server_version' => $result['version'],
                 'server_time' => $result['server_time'],
-                'connection_compressed' => $connection->getAttribute(\PDO::MYSQL_ATTR_COMPRESS),
+                'connection_compressed' => $compression,
             ];
             
         } catch (\PDOException $e) {

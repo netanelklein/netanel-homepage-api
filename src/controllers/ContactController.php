@@ -1,10 +1,10 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
-use Models\PortfolioModel;
-use Services\ValidationService;
-use Services\LoggingService;
+use App\Models\PortfolioModel;
+use App\Services\ValidationService;
+use App\Services\LoggingService;
 
 /**
  * Contact Controller

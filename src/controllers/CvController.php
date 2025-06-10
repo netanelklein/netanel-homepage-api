@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Controllers;
+namespace App\Controllers;
 
-use Api\Core\Request;
-use Api\Core\Response;
-use Api\Models\PortfolioModel;
-use Api\Services\LoggingService;
+use Core\Request;
+use Core\Response;
+use App\Models\PortfolioModel;
+use App\Services\LoggingService;
 
 /**
  * CV Controller
@@ -27,11 +27,8 @@ class CvController extends BaseController
 
     /**
      * Generate and download CV as PDF
-     * 
-     * @param Request $request
-     * @return Response
      */
-    public function download(Request $request): Response
+    public function download()
     {
         try {
             // Get portfolio data
@@ -55,7 +52,7 @@ class CvController extends BaseController
             ];
 
             // Check for different output formats
-            $format = $request->getQuery('format', 'pdf');
+            $format = $this->request->query('format', 'pdf');
             
             switch ($format) {
                 case 'pdf':
@@ -472,11 +469,8 @@ class CvController extends BaseController
 
     /**
      * Get CV statistics for analytics
-     * 
-     * @param Request $request
-     * @return Response
      */
-    public function getStats(Request $request): Response
+    public function getStats()
     {
         try {
             // This would typically track download counts, etc.
@@ -487,14 +481,14 @@ class CvController extends BaseController
                 'last_updated' => date('Y-m-d H:i:s')
             ];
             
-            return $this->jsonResponse($stats);
+            return $this->response->success('CV statistics retrieved successfully', $stats);
             
         } catch (\Exception $e) {
             $this->logger->error('CV stats retrieval failed', [
                 'error' => $e->getMessage()
             ]);
             
-            return $this->errorResponse('Failed to retrieve CV statistics', 500);
+            return $this->response->error('Failed to retrieve CV statistics', 500);
         }
     }
 }

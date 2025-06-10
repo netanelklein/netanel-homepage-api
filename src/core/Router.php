@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Exception;
+
 /**
  * Simple routing system for the API
  * Handles HTTP methods and URL patterns
@@ -199,7 +201,7 @@ class Router
             throw new Exception("Invalid handler format: {$handler}");
         }
         
-        $controllerName = "\\Controllers\\{$parts[0]}";
+        $controllerName = "\\App\\Controllers\\{$parts[0]}";
         $methodName = $parts[1];
         
         if (!class_exists($controllerName)) {
@@ -230,7 +232,7 @@ class Router
         }
         
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, Accept');
         header('Access-Control-Allow-Credentials: true');
         header('Content-Type: application/json');
     }

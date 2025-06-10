@@ -39,6 +39,11 @@ return [
             'https://netanelk.com',
             'https://admin.netanelk.com',
             'http://localhost:3000', // For development
+            'http://localhost:8080', // Flutter web development
+            'http://localhost:5000', // Alternative Flutter port
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:8080',
+            'http://127.0.0.1:5000',
         ]
     ],
     

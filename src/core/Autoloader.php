@@ -18,6 +18,21 @@ class Autoloader
         $this->addNamespace('Middleware', __DIR__ . '/../middleware');
         $this->addNamespace('Services', __DIR__ . '/../services');
         $this->addNamespace('Helpers', __DIR__ . '/../helpers');
+        
+        // Add App namespace mappings
+        $this->addNamespace('App\\Controllers', __DIR__ . '/../controllers');
+        $this->addNamespace('App\\Models', __DIR__ . '/../models');
+        $this->addNamespace('App\\Services', __DIR__ . '/../services');
+        $this->addNamespace('App\\Middleware', __DIR__ . '/../middleware');
+        $this->addNamespace('App\\Core', __DIR__);
+        $this->addNamespace('Api\\Core', __DIR__);
+        
+        // Add App namespace mappings
+        $this->addNamespace('App\\Controllers', __DIR__ . '/../controllers');
+        $this->addNamespace('App\\Models', __DIR__ . '/../models');
+        $this->addNamespace('App\\Services', __DIR__ . '/../services');
+        $this->addNamespace('App\\Core', __DIR__);
+        $this->addNamespace('Api\\Core', __DIR__);
     }
     
     /**

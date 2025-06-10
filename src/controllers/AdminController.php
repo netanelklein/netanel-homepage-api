@@ -1,13 +1,13 @@
 <?php
 
-namespace Api\Controllers;
+namespace App\Controllers;
 
-use Api\Core\Request;
-use Api\Core\Response;
-use Api\Models\PortfolioModel;
-use Api\Models\AdminModel;
-use Api\Services\ValidationService;
-use Api\Services\LoggingService;
+use Core\Request;
+use Core\Response;
+use App\Models\PortfolioModel;
+use App\Models\AdminModel;
+use App\Services\ValidationService;
+use App\Services\LoggingService;
 
 /**
  * Admin Controller
@@ -747,9 +747,8 @@ class AdminController extends BaseController
      * Get admin dashboard statistics
      * 
      * @param Request $request
-     * @return Response
      */
-    public function getDashboardStats(Request $request): Response
+    public function getDashboardStats()
     {
         try {
             $stats = [
@@ -775,7 +774,7 @@ class AdminController extends BaseController
                 'admin_id' => $_SESSION['admin_id'] ?? null
             ]);
 
-            return $this->errorResponse('Failed to retrieve dashboard statistics', 500);
+            return $this->response->error('Failed to retrieve dashboard statistics', 500);
         }
     }
 
