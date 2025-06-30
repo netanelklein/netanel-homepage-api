@@ -369,6 +369,16 @@ class PortfolioModel extends BaseModel
         
         return $grouped;
     }
+
+    /**
+     * Get raw skills data (not grouped) for transformation
+     */
+    public function getRawSkills()
+    {
+        $sql = "SELECT * FROM skills ORDER BY category ASC, level DESC, name ASC";
+        $skills = $this->db->cachedQuery($sql, [], 900); // 15 minutes cache
+        return $skills ?: [];
+    }
     
     /**
      * Get cached experience (optimized for remote database)

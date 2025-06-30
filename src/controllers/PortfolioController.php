@@ -134,7 +134,7 @@ class PortfolioController extends BaseController
             // Fetch all data using cached methods
             $personalInfoRaw = $this->portfolioModel->getCachedPersonalInfo();
             $projects = $this->portfolioModel->getCachedProjects();
-            $skills = $this->portfolioModel->getCachedSkills();
+            $skills = $this->portfolioModel->getRawSkills(); // Use raw skills for transformation
             $experience = $this->portfolioModel->getCachedExperience();
             $education = $this->portfolioModel->getCachedEducation();
             
