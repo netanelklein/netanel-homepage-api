@@ -176,6 +176,11 @@ class PortfolioController extends BaseController
         
         // Group skills by category
         foreach ($skills as $skill) {
+            // Skip invalid skills
+            if (empty($skill['name'])) {
+                continue;
+            }
+            
             $category = $skill['category'] ?? 'Other';
             
             if (!isset($skillCategories[$category])) {
@@ -188,17 +193,23 @@ class PortfolioController extends BaseController
                 ];
             }
             
+            $skillName = $skill['name'];
             $skillCategories[$category]['skills'][] = [
-                'id' => strtolower(str_replace([' ', '/'], ['_', '_'], $skill['name'])),
-                'name' => $skill['name'],
+                'id' => strtolower(str_replace([' ', '/', '.'], ['_', '_', ''], $skillName)),
+                'name' => $skillName,
                 'level' => $skill['level'] ?? 'intermediate',
                 'category' => $category,
-                'yearsOfExperience' => $this->getYearsOfExperience($skill['name']),
+                'yearsOfExperience' => $this->getYearsOfExperience($skillName),
                 'description' => $skill['description'] ?? null,
                 'iconName' => null,
-                'isHighlighted' => $this->isSkillHighlighted($skill['name'])
+                'isHighlighted' => $this->isSkillHighlighted($skillName)
             ];
         }
+        
+        // Remove empty categories
+        $skillCategories = array_filter($skillCategories, function($category) {
+            return !empty($category['skills']);
+        });
         
         // Sort categories by display order and convert to indexed array
         uasort($skillCategories, function($a, $b) {
@@ -259,15 +270,25 @@ class PortfolioController extends BaseController
             $technologies = is_array($tech) ? $tech : [];
         }
         
+        // Map status to Flutter enum values
+        $status = $project['status'] ?? 'active';
+        $statusMap = [
+            'active' => 'inProgress',
+            'completed' => 'completed',
+            'archived' => 'archived',
+            'maintained' => 'maintained'
+        ];
+        $flutterStatus = $statusMap[$status] ?? 'inProgress';
+        
         return [
             'id' => (string)$project['id'],
             'title' => $project['title'] ?? '',
             'description' => $project['description'] ?? '',
             'longDescription' => $project['long_description'] ?? $project['description'] ?? '',
             'type' => 'personal', // Default type - can be made dynamic
-            'status' => $project['status'] ?? 'active',
+            'status' => $flutterStatus,
             'startDate' => isset($project['created_at']) ? date('c', strtotime($project['created_at'])) : null,
-            'endDate' => isset($project['updated_at']) && $project['status'] === 'completed' 
+            'endDate' => isset($project['updated_at']) && $flutterStatus === 'completed' 
                 ? date('c', strtotime($project['updated_at'])) : null,
             'technologies' => $technologies,
             'features' => [], // Can be added to database later
@@ -363,10 +384,13 @@ class PortfolioController extends BaseController
             'Database' => 'Data storage and management systems',
             'DevOps' => 'Development operations and deployment',
             'Mobile' => 'Mobile application development',
+            'Programming Languages' => 'Core programming languages',
+            'Frameworks' => 'Development frameworks and libraries',
+            'Tools' => 'Development tools and utilities',
             'Other' => 'Additional technical skills'
         ];
         
-        return $descriptions[$category] ?? null;
+        return $descriptions[$category] ?? 'Technical skills';
     }
 
     /**
@@ -380,7 +404,10 @@ class PortfolioController extends BaseController
             'Database' => 3,
             'Mobile' => 4,
             'DevOps' => 5,
-            'Other' => 6
+            'Programming Languages' => 6,
+            'Frameworks' => 7,
+            'Tools' => 8,
+            'Other' => 9
         ];
         
         return $order[$category] ?? 999;
